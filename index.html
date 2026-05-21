@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Upload Studio</title>
+  <title>파일 업로드</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📁</text></svg>" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#f2a8c6" />
@@ -75,14 +75,13 @@
     }
 
     .page-shell {
-      width: min(1120px, 100%);
+      width: min(640px, 100%);
       min-height: 100vh;
       margin: 0 auto;
-      padding: 44px 24px;
-      display: grid;
-      grid-template-columns: minmax(280px, 0.88fr) minmax(360px, 1.12fr);
-      gap: 28px;
+      padding: 24px 14px;
+      display: flex;
       align-items: center;
+      justify-content: center;
       position: relative;
       z-index: 1;
     }
@@ -235,6 +234,7 @@
     }
 
     .mac-window {
+      width: 100%;
       border-radius: 30px;
       overflow: hidden;
       background: rgba(255,255,255,.54);
@@ -935,21 +935,8 @@
 
     @media (max-width: 920px) {
       .page-shell {
-        grid-template-columns: 1fr;
-        padding: 24px 16px;
-        align-items: start;
-      }
-
-      .hero-panel {
-        min-height: auto;
-      }
-
-      .hero-copy h1 {
-        font-size: clamp(34px, 11vw, 54px);
-      }
-
-      .mood-board {
-        display: none;
+        width: min(640px, 100%);
+        padding: 18px 14px;
       }
     }
 
@@ -963,11 +950,6 @@
 
       .page-shell {
         padding: 14px;
-      }
-
-      .hero-panel {
-        padding: 24px;
-        border-radius: 26px;
       }
 
       .mac-window {
@@ -1031,49 +1013,6 @@
 <body>
 
 <main class="page-shell">
-  <section class="hero-panel" aria-label="업로드 페이지 소개">
-    <div class="hero-content">
-      <div>
-        <div class="brand-pill"><span class="brand-dot"></span> MAC INSPIRED CLOUD DROP</div>
-        <div class="hero-copy">
-          <h1>Upload<br><span>Studio</span></h1>
-          <p>스크린샷, 파일, 텍스트를 가볍게 올리고 바로 공유할 수 있는 개인용 업로드 보드입니다. 맥 데스크톱 위에 작은 업로드 창을 띄운 듯한 분위기로 정리했어요.</p>
-        </div>
-      </div>
-
-      <div class="mood-board" aria-hidden="true">
-        <div class="mood-card">
-          <div class="mood-icon">⌘</div>
-          <div>
-            <strong>Mac Window</strong>
-            <span>상단 트래픽 라이트와 부드러운 유리 질감</span>
-          </div>
-        </div>
-        <div class="mood-card">
-          <div class="mood-icon">⇧</div>
-          <div>
-            <strong>Quick Upload</strong>
-            <span>드래그, 클릭, 붙여넣기로 바로 추가</span>
-          </div>
-        </div>
-        <div class="mood-card">
-          <div class="mood-icon">✦</div>
-          <div>
-            <strong>Pinterest Mood</strong>
-            <span>파스텔 톤과 감성적인 카드 레이아웃</span>
-          </div>
-        </div>
-        <div class="mood-card">
-          <div class="mood-icon">7d</div>
-          <div>
-            <strong>Auto Clean</strong>
-            <span>업로드 파일은 7일 뒤 자동 삭제</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="mac-window" aria-label="파일 업로드 창">
     <div class="window-toolbar">
       <div class="traffic-lights" aria-hidden="true">
