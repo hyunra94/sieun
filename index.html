@@ -1508,7 +1508,10 @@ const WORKER_URL = 'https://sieunfile.b41811.workers.dev';
 
         await uploadWithProgress(file, formData, secret, pct => setProgress(pct));
         const downloadUrl = lastDownloadUrl;
-        results.push({ name: file.name, url: downloadUrl, size: file.size, key: `uploads/${new Date().toISOString().slice(0,10)}/${encodeURIComponent(file.name)}` });
+        const date = new Date().toISOString().slice(0, 10);
+        const fallbackKey = `uploads/main/${date}/${encodeURIComponent(file.name)}`;
+        const key = lastKey || fallbackKey;
+        results.push({ name: file.name, url: downloadUrl, size: file.size, key });
         setProgress(100);
       } catch (e) {
         showError(`${file.name}: ${e.message}`);
@@ -1528,6 +1531,7 @@ const WORKER_URL = 'https://sieunfile.b41811.workers.dev';
   });
 
   let lastDownloadUrl = '';
+  let lastKey = '';
 
   function uploadWithProgress(file, formData, secret, onProgress) {
     return new Promise((resolve, reject) => {
@@ -1539,6 +1543,7 @@ const WORKER_URL = 'https://sieunfile.b41811.workers.dev';
         if (xhr.status >= 200 && xhr.status < 300) {
           const res = JSON.parse(xhr.responseText);
           lastDownloadUrl = res.downloadUrl;
+          lastKey = res.key || '';
           resolve();
         } else {
           const err = JSON.parse(xhr.responseText || '{}');
