@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>파일 업로드</title>
+  <title>Upload Studio</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📁</text></svg>" />
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#7db8f7" />
+  <meta name="theme-color" content="#f2a8c6" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="파일업로드" />
   <meta property="og:title" content="파일 업로드" />
@@ -16,378 +16,1163 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f0f6ff;
-      --surface: #ffffff;
-      --border: #c8dff8;
-      --pink: #7db8f7;
-      --pink-light: #e3f0ff;
-      --pink-deep: #4a90d9;
-      --green: #82c4e8;
-      --green-light: #dff1fb;
-      --text: #1a3a5c;
-      --text-sub: #6a90b8;
-      --shadow: 0 4px 20px rgba(100,160,220,0.13);
-      --radius: 16px;
+      --bg: #f7f2ee;
+      --surface: rgba(255, 255, 255, 0.78);
+      --surface-strong: #ffffff;
+      --surface-soft: rgba(255, 255, 255, 0.52);
+      --border: rgba(67, 60, 82, 0.12);
+      --border-strong: rgba(67, 60, 82, 0.2);
+      --blue: #8cb7ff;
+      --blue-deep: #456ce8;
+      --pink: #f2a8c6;
+      --pink-light: #fff0f7;
+      --pink-deep: #c15b88;
+      --green: #91d5c2;
+      --green-light: #ecfbf6;
+      --cream: #fff8ef;
+      --lavender: #efeaff;
+      --text: #27212f;
+      --text-sub: #7d7489;
+      --danger: #d65a63;
+      --danger-bg: #fff2f2;
+      --shadow: 0 24px 70px rgba(59, 47, 80, 0.18);
+      --shadow-soft: 0 14px 34px rgba(78, 69, 94, 0.11);
+      --radius-xl: 32px;
+      --radius: 20px;
+      --radius-sm: 14px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
+    html {
+      min-height: 100%;
       background: var(--bg);
+    }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      color: var(--text);
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 9% 14%, rgba(255, 196, 219, 0.76) 0 13%, transparent 28%),
+        radial-gradient(circle at 88% 10%, rgba(154, 197, 255, 0.72) 0 15%, transparent 30%),
+        radial-gradient(circle at 78% 78%, rgba(162, 226, 203, 0.58) 0 14%, transparent 30%),
+        linear-gradient(135deg, #fff9f2 0%, #f7eef5 42%, #eef5ff 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
       background-image:
-        radial-gradient(circle at 20% 20%, #daeeff55 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, #e3f0ff55 0%, transparent 50%);
+        linear-gradient(rgba(255,255,255,.34) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.28) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.58), transparent 76%);
+      opacity: .65;
+    }
+
+    .page-shell {
+      width: min(1120px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 44px 24px;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.88fr) minmax(360px, 1.12fr);
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-panel {
+      min-height: 610px;
+      border: 1px solid rgba(255,255,255,.7);
+      border-radius: var(--radius-xl);
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.46), rgba(255,255,255,.18)),
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, .64), transparent 28%),
+        radial-gradient(circle at 72% 30%, rgba(255, 168, 198, .28), transparent 32%);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(22px);
+    }
+
+    .hero-panel::before,
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(0.2px);
+      opacity: .88;
+    }
+
+    .hero-panel::before {
+      width: 240px;
+      height: 240px;
+      right: -78px;
+      top: -58px;
+      background: linear-gradient(135deg, #b9d3ff, #f9bbd6);
+    }
+
+    .hero-panel::after {
+      width: 210px;
+      height: 210px;
+      left: -74px;
+      bottom: -70px;
+      background: linear-gradient(135deg, #ffe2b9, #a7e4d0);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 34px;
+    }
+
+    .brand-pill {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 999px;
+      background: rgba(255,255,255,.5);
+      color: #6d5e78;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      box-shadow: 0 10px 22px rgba(94, 72, 104, .08);
+    }
+
+    .brand-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      box-shadow: 0 0 0 5px rgba(242,168,198,.18);
+    }
+
+    .hero-copy h1 {
+      margin-top: 30px;
+      font-size: clamp(36px, 5.5vw, 64px);
+      line-height: .98;
+      letter-spacing: -0.06em;
+      color: #252031;
+    }
+
+    .hero-copy h1 span {
+      display: block;
+      color: rgba(39,33,47,.55);
+      font-weight: 500;
+    }
+
+    .hero-copy p {
+      margin-top: 18px;
+      max-width: 360px;
+      font-size: 14px;
+      line-height: 1.78;
+      color: var(--text-sub);
+    }
+
+    .mood-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-card {
+      min-height: 124px;
+      padding: 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.62);
+      background: rgba(255,255,255,.48);
+      box-shadow: 0 16px 34px rgba(73, 59, 86, .1);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mood-card:nth-child(2) { transform: translateY(22px); background: rgba(255,240,247,.58); }
+    .mood-card:nth-child(3) { background: rgba(236,251,246,.58); }
+    .mood-card:nth-child(4) { transform: translateY(22px); background: rgba(238,245,255,.62); }
+
+    .mood-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(255,255,255,.64);
+      font-size: 19px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.45);
+    }
+
+    .mood-card strong {
+      display: block;
+      margin-top: 18px;
+      font-size: 13px;
+      letter-spacing: -.02em;
+    }
+
+    .mood-card span {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--text-sub);
+    }
+
+    .mac-window {
+      border-radius: 30px;
+      overflow: hidden;
+      background: rgba(255,255,255,.54);
+      border: 1px solid rgba(255,255,255,.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+    }
+
+    .window-toolbar {
+      height: 48px;
+      padding: 0 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.68), rgba(255,255,255,.42));
+      border-bottom: 1px solid rgba(67, 60, 82, 0.09);
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .traffic-lights span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: block;
+      box-shadow: inset 0 -1px 1px rgba(0,0,0,.12);
+    }
+
+    .traffic-lights span:nth-child(1) { background: #ff6b67; }
+    .traffic-lights span:nth-child(2) { background: #ffc94c; }
+    .traffic-lights span:nth-child(3) { background: #39d07f; }
+
+    .window-title {
+      justify-self: center;
+      min-width: 0;
+      max-width: 270px;
+      width: 100%;
+      padding: 7px 14px;
+      border-radius: 999px;
+      text-align: center;
+      font-size: 12px;
+      color: #81778b;
+      background: rgba(255,255,255,.54);
+      border: 1px solid rgba(255,255,255,.7);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .toolbar-pill {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,248,239,.72);
+      color: #9a7451;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1.5px solid var(--border);
       width: 100%;
-      max-width: 520px;
       overflow: hidden;
+      background: rgba(255,255,255,.58);
     }
 
     .card-header {
-      background: linear-gradient(135deg, var(--pink-light) 0%, var(--green-light) 100%);
-      padding: 24px 32px 16px;
-      border-bottom: 1.5px solid var(--border);
+      padding: 30px 34px 22px;
+      background:
+        radial-gradient(circle at 16% 20%, rgba(255,255,255,.88), transparent 34%),
+        linear-gradient(135deg, rgba(255,240,247,.92) 0%, rgba(236,245,255,.9) 58%, rgba(236,251,246,.86) 100%);
+      border-bottom: 1px solid var(--border);
     }
-    .card-header h1 { font-size: 20px; font-weight: 700; color: var(--text); }
-    .card-header p { font-size: 12px; color: var(--text-sub); margin-top: 3px; }
 
-    /* 공유로 열림 알림 */
+    .header-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--pink-deep);
+      margin-bottom: 12px;
+    }
+
+    .header-eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 14px 0 0 var(--blue), 28px 0 0 var(--green);
+    }
+
+    .card-header h1 {
+      font-size: 28px;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .card-header p {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-top: 8px;
+      line-height: 1.58;
+    }
+
+    .shortlink-wrap {
+      margin-top: 18px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 24px rgba(77, 63, 91, .08);
+    }
+
+    .shortlink-label {
+      font-size: 11px;
+      color: var(--text-sub);
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .shortlink-url {
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--blue-deep);
+      filter: blur(5px);
+      cursor: pointer;
+      user-select: none;
+      transition: filter .25s ease, color .2s ease;
+      text-decoration: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .shortlink-url.revealed {
+      filter: none;
+      cursor: pointer;
+    }
+
+    .shortlink-hint {
+      font-size: 11px;
+      color: var(--text-sub);
+      white-space: nowrap;
+    }
+
     .share-notice {
       display: none;
-      background: #e8f5e5;
-      border-bottom: 1.5px solid var(--green);
-      padding: 10px 32px;
-      font-size: 12px;
-      color: #3a6a3a;
+      margin: 16px 34px 0;
+      background: rgba(236, 251, 246, .88);
+      border: 1px solid rgba(145, 213, 194, .58);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #407b69;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: var(--shadow-soft);
     }
+
     .share-notice.show { display: flex; }
 
     .key-bar {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 14px 32px;
-      border-bottom: 1.5px solid var(--border);
-      background: #fdfbf9;
+      gap: 10px;
+      padding: 18px 34px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.5);
     }
-    .key-bar label { font-size: 13px; font-weight: 500; color: var(--text-sub); white-space: nowrap; }
+
+    .key-bar label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
     .key-bar input {
       flex: 1;
-      padding: 8px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
+      min-width: 0;
+      padding: 12px 14px;
+      border: 1px solid rgba(67, 60, 82, 0.12);
+      border-radius: 16px;
       font-size: 13px;
-      font-family: 'Noto Sans KR', sans-serif;
+      font-family: inherit;
       color: var(--text);
-      background: #fff;
+      background: rgba(255,255,255,.74);
       outline: none;
-      transition: border-color 0.2s;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+      transition: border-color .2s, box-shadow .2s, background .2s;
     }
-    .key-bar input:focus { border-color: var(--pink); }
 
-    .tabs { display: flex; border-bottom: 1.5px solid var(--border); }
+    .key-bar input:focus {
+      border-color: rgba(69,108,232,.42);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(140,183,255,.18);
+    }
+
+    .tabs {
+      display: flex;
+      padding: 10px;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.38);
+    }
+
     .tab-btn {
       flex: 1;
       padding: 12px;
-      border: none;
-      background: none;
+      border: 1px solid transparent;
+      border-radius: 16px;
+      background: transparent;
       font-size: 13px;
-      font-weight: 500;
-      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 800;
+      font-family: inherit;
       color: var(--text-sub);
       cursor: pointer;
-      border-bottom: 2.5px solid transparent;
-      transition: all 0.2s;
-    }
-    .tab-btn.active {
-      color: var(--pink-deep);
-      border-bottom-color: var(--pink-deep);
-      background: var(--pink-light);
+      transition: all .2s ease;
     }
 
-    .tab-panel { display: none; padding: 24px 32px; }
-    .tab-panel.active { display: flex; flex-direction: column; gap: 18px; }
+    .tab-btn:hover {
+      background: rgba(255,255,255,.5);
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--blue-deep);
+      border-color: rgba(140,183,255,.34);
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 10px 22px rgba(75, 96, 150, .08);
+    }
+
+    .tab-panel {
+      display: none;
+      padding: 26px 34px 30px;
+    }
+
+    .tab-panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    #fileMode {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: rgba(255,255,255,.52);
+      border: 1px solid rgba(255,255,255,.64);
+      border-radius: 18px;
+      padding: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+    }
+
+    .mode-btn {
+      padding: 11px;
+      border: none;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-sub);
+      transition: all .2s ease;
+    }
+
+    .mode-btn.active {
+      background: #fff;
+      color: var(--pink-deep);
+      box-shadow: 0 10px 22px rgba(95, 66, 98, 0.10);
+    }
 
     .dropzone {
-      border: 2px dashed var(--pink);
-      border-radius: var(--radius);
-      padding: 32px 20px;
+      border: 1.5px dashed rgba(69,108,232,.35);
+      border-radius: 26px;
+      padding: 38px 22px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
-      background: #fff;
+      transition: all .22s ease;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,.54)),
+        radial-gradient(circle at 50% 0%, rgba(140,183,255,.16), transparent 42%);
       position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.52);
     }
-    .dropzone:hover, .dropzone.drag-over { background: var(--pink-light); border-color: var(--pink-deep); }
-    .dropzone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .dropzone-icon { font-size: 32px; margin-bottom: 8px; }
-    .dropzone p { font-size: 14px; font-weight: 500; color: var(--text); }
-    .dropzone span { font-size: 12px; color: var(--text-sub); margin-top: 4px; display: block; }
 
-    .file-list { display: flex; flex-direction: column; gap: 7px; }
+    .dropzone::before {
+      content: "";
+      position: absolute;
+      inset: 13px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.68);
+      pointer-events: none;
+    }
+
+    .dropzone:hover,
+    .dropzone.drag-over {
+      transform: translateY(-2px);
+      border-color: rgba(193,91,136,.45);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,240,247,.72)),
+        radial-gradient(circle at 50% 0%, rgba(242,168,198,.2), transparent 44%);
+      box-shadow: 0 16px 32px rgba(93, 76, 104, .1);
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .dropzone-icon {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+      border-radius: 26px;
+      background:
+        linear-gradient(135deg, #fff, rgba(255,255,255,.52)),
+        linear-gradient(135deg, rgba(242,168,198,.25), rgba(140,183,255,.25));
+      box-shadow: 0 16px 26px rgba(74, 83, 119, .1);
+      font-size: 34px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dropzone p {
+      position: relative;
+      z-index: 1;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .dropzone span {
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 7px;
+      display: block;
+      line-height: 1.55;
+    }
+
+    .file-list,
+    .list-items,
+    .result-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .file-item {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--pink-light); border-radius: 9px; padding: 9px 12px; font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(67, 60, 82, 0.08);
+      border-radius: 16px;
+      padding: 12px 13px;
+      font-size: 13px;
+      box-shadow: var(--shadow-soft);
     }
-    .file-item .file-name { flex: 1; color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .file-item .file-size { color: var(--text-sub); font-size: 12px; flex-shrink: 0; }
-    .file-item .remove-btn { background: none; border: none; cursor: pointer; color: var(--pink-deep); font-size: 15px; padding: 0; flex-shrink: 0; line-height: 1; }
 
-    .progress-wrap { display: none; }
+    .file-item .file-name {
+      flex: 1;
+      color: var(--text);
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-item .file-size {
+      color: var(--text-sub);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .file-item .remove-btn {
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--danger);
+      background: var(--danger-bg);
+      font-size: 13px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .progress-wrap {
+      display: none;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(255,255,255,.7);
+    }
+
     .progress-wrap.show { display: block; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub); margin-bottom: 6px; }
-    .progress-bar-bg { background: var(--border); border-radius: 100px; height: 8px; overflow: hidden; }
-    .progress-bar-fill { background: linear-gradient(90deg, var(--pink), var(--green)); height: 100%; border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-bg {
+      background: rgba(67, 60, 82, 0.1);
+      border-radius: 100px;
+      height: 9px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--pink), var(--blue), var(--green));
+      height: 100%;
+      border-radius: 100px;
+      width: 0%;
+      transition: width .3s ease;
+    }
 
     .upload-btn {
-      width: 100%; padding: 12px;
-      background: linear-gradient(135deg, var(--pink) 0%, var(--green) 100%);
-      border: none; border-radius: 12px; color: #fff;
-      font-size: 15px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif;
-      cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ff9ec5 0%, #8cb7ff 48%, #91d5c2 100%);
+      border: none;
+      border-radius: 18px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 15px 30px rgba(94, 107, 190, .18);
+      transition: opacity .2s, transform .15s, box-shadow .2s;
     }
-    .upload-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-    .upload-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    .result-box { display: none; flex-direction: column; gap: 8px; }
-    .result-box.show { display: flex; }
+    .upload-btn:hover:not(:disabled) {
+      opacity: .95;
+      transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(94, 107, 190, .23);
+    }
 
-    .error-box { display: none; background: #fff0f0; border: 1.5px solid #f5b8b8; border-radius: 10px; padding: 11px 14px; font-size: 13px; color: #c0392b; }
+    .upload-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .result-box {
+      display: none;
+    }
+
+    .result-box.show {
+      display: flex;
+    }
+
+    .error-box {
+      display: none;
+      background: rgba(255,242,242,.92);
+      border: 1px solid rgba(214,90,99,.25);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--danger);
+      line-height: 1.55;
+    }
+
     .error-box.show { display: block; }
 
-    .fcard { background: var(--green-light); border: 1.5px solid var(--green); border-radius: 10px; padding: 11px 14px; }
-    .fcard-name {
-      font-size: 12px; color: var(--text-sub); margin-bottom: 5px;
-      display: flex; align-items: center; gap: 5px;
+    .fcard {
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(67, 60, 82, 0.1);
+      border-radius: 18px;
+      padding: 13px;
+      box-shadow: var(--shadow-soft);
     }
+
+    .fcard-name {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .fcard-name span:first-child {
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-weight: 800;
+      color: var(--text);
     }
-    .fcard-meta { margin-left: auto; font-size: 11px; color: var(--text-sub); }
-    .fcard-row { display: flex; align-items: center; gap: 6px; }
-    .fcard-url-hidden { display: none; }
-    .btn-group { display: flex; gap: 6px; flex-shrink: 0; width: 100%; }
-    .copy-btn, .share-btn, .open-btn { border: none; border-radius: 7px; color: #fff; font-size: 11px; font-family: 'Noto Sans KR', sans-serif; padding: 7px 8px; cursor: pointer; white-space: nowrap; transition: background 0.2s; flex: 1; text-align: center; }
-    .copy-btn { background: var(--pink); }
-    .copy-btn:hover { background: var(--pink-deep); }
-    .copy-btn.copied { background: var(--green); }
-    .share-btn { background: var(--green); }
-    .share-btn:hover { background: #7aaa72; }
-    .open-btn { background: #a0b4e0; }
-    .open-btn:hover { background: #7a96cc; }
-    .download-btn { background: var(--pink); }
-    .download-btn:hover { background: var(--pink-deep); }
-    .delete-btn { background: none; border: 1.5px solid #f5b8b8; border-radius: 7px; color: #c0392b; font-size: 11px; font-family: 'Noto Sans KR', sans-serif; padding: 5px 8px; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
-    .delete-btn:hover { background: #fff0f0; }
 
-    .list-header { display: flex; align-items: center; justify-content: space-between; }
-    .list-header span { font-size: 13px; color: var(--text-sub); }
-    .refresh-btn { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-family: 'Noto Sans KR', sans-serif; color: var(--text-sub); cursor: pointer; transition: all 0.2s; }
-    .refresh-btn:hover { border-color: var(--pink); color: var(--pink-deep); }
-    .list-loading, .list-empty { text-align: center; padding: 32px; color: var(--text-sub); font-size: 13px; }
-    .list-items { display: flex; flex-direction: column; gap: 8px; }
-    .date-divider { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: 0.5px; padding: 4px 0 2px; border-bottom: 1px solid var(--border); }
-    .expire-note { text-align: center; font-size: 11px; color: var(--text-sub); }
+    .fcard-meta {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-sub);
+      font-weight: 700;
+    }
 
-    /* 단축 링크 */
-    .shortlink-wrap {
-      background: var(--pink-light);
-      border: 1.5px solid var(--pink);
-      border-radius: 12px;
-      padding: 12px 16px;
+    .fcard-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-    .shortlink-label { font-size: 12px; color: var(--text-sub); white-space: nowrap; }
-    .shortlink-url {
-      flex: 1;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--pink-deep);
-      filter: blur(5px);
-      cursor: pointer;
-      user-select: none;
-      transition: filter 0.3s;
-      text-decoration: none;
-    }
-    .shortlink-url.revealed {
-      filter: none;
-      cursor: pointer;
-    }
-    .shortlink-url {
-      flex: 1;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--pink-deep);
-      filter: blur(5px);
-      cursor: pointer;
-      user-select: none;
-      transition: filter 0.3s;
-    }
-    .shortlink-url.revealed { filter: none; }
-    .shortlink-hint { font-size: 11px; color: var(--text-sub); white-space: nowrap; }
-
-    /* 파일/텍스트 토글 */
-    .mode-toggle {
-      display: flex;
       gap: 6px;
-      background: var(--pink-light);
-      border-radius: 10px;
-      padding: 4px;
-    }
-    .mode-btn {
-      flex: 1;
-      padding: 7px;
-      border: none;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 500;
-      font-family: 'Noto Sans KR', sans-serif;
-      cursor: pointer;
-      background: none;
-      color: var(--text-sub);
-      transition: all 0.2s;
-    }
-    .mode-btn.active {
-      background: #fff;
-      color: var(--pink-deep);
-      box-shadow: 0 1px 4px rgba(180,130,130,0.15);
     }
 
-    /* 텍스트 입력 */
-    .text-input-wrap { display: none; flex-direction: column; gap: 10px; }
-    .text-input-wrap.show { display: flex; }
-    .text-area {
+    .fcard-url-hidden { display: none; }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      flex-shrink: 0;
       width: 100%;
-      min-height: 160px;
-      padding: 12px;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
+    }
+
+    .copy-btn,
+    .share-btn,
+    .open-btn {
+      border: none;
+      border-radius: 13px;
+      color: #fff;
+      font-size: 11px;
+      font-family: inherit;
+      font-weight: 800;
+      padding: 9px 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform .15s, opacity .2s;
+      flex: 1;
+      text-align: center;
+    }
+
+    .copy-btn:hover,
+    .share-btn:hover,
+    .open-btn:hover {
+      transform: translateY(-1px);
+      opacity: .92;
+    }
+
+    .copy-btn { background: #8cb7ff; }
+    .copy-btn.copied { background: var(--green); }
+    .share-btn { background: #91d5c2; }
+    .open-btn { background: #b8a9f6; }
+
+    .download-btn { background: var(--blue); }
+
+    .delete-btn {
+      background: var(--danger-bg);
+      border: 1px solid rgba(214,90,99,.22);
+      border-radius: 999px;
+      color: var(--danger);
+      font-size: 11px;
+      font-family: inherit;
+      font-weight: 800;
+      padding: 5px 9px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+
+    .delete-btn:hover {
+      background: #ffe7e9;
+    }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(255,255,255,.7);
+    }
+
+    .list-header span {
       font-size: 13px;
-      font-family: 'Noto Sans KR', sans-serif;
-      color: var(--text);
-      background: #fff;
-      outline: none;
-      resize: vertical;
-      transition: border-color 0.2s;
+      color: var(--text-sub);
+      font-weight: 800;
+    }
+
+    .refresh-btn {
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(67, 60, 82, 0.1);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 800;
+      color: var(--blue-deep);
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .list-loading,
+    .list-empty {
+      text-align: center;
+      padding: 36px 18px;
+      color: var(--text-sub);
+      font-size: 13px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.48);
+      border: 1px dashed rgba(67, 60, 82, 0.15);
+      line-height: 1.65;
+    }
+
+    .date-divider {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--pink-deep);
+      letter-spacing: .08em;
+      padding: 8px 2px 4px;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(67, 60, 82, 0.09);
+    }
+
+    .expire-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-sub);
       line-height: 1.6;
     }
-    .text-area:focus { border-color: var(--pink); }
+
+    .text-input-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .text-input-wrap.show {
+      display: flex;
+    }
+
+    .text-area {
+      width: 100%;
+      min-height: 180px;
+      padding: 15px;
+      border: 1px solid rgba(67, 60, 82, 0.12);
+      border-radius: 22px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text);
+      background: rgba(255,255,255,.74);
+      outline: none;
+      resize: vertical;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      line-height: 1.7;
+    }
+
+    .text-area:focus {
+      border-color: rgba(193,91,136,.36);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(242,168,198,.16);
+    }
+
+    @media (max-width: 920px) {
+      .page-shell {
+        grid-template-columns: 1fr;
+        padding: 24px 16px;
+        align-items: start;
+      }
+
+      .hero-panel {
+        min-height: auto;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(34px, 11vw, 54px);
+      }
+
+      .mood-board {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        background:
+          radial-gradient(circle at 8% 8%, rgba(255,196,219,.65) 0 12%, transparent 26%),
+          radial-gradient(circle at 94% 12%, rgba(154,197,255,.65) 0 12%, transparent 28%),
+          linear-gradient(135deg, #fff9f2 0%, #f7eef5 52%, #eef5ff 100%);
+      }
+
+      .page-shell {
+        padding: 14px;
+      }
+
+      .hero-panel {
+        padding: 24px;
+        border-radius: 26px;
+      }
+
+      .mac-window {
+        border-radius: 26px;
+      }
+
+      .window-toolbar {
+        grid-template-columns: auto 1fr;
+      }
+
+      .toolbar-pill {
+        display: none;
+      }
+
+      .window-title {
+        justify-self: end;
+        max-width: 190px;
+      }
+
+      .card-header,
+      .key-bar,
+      .tab-panel {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .card-header h1 {
+        font-size: 24px;
+      }
+
+      .shortlink-wrap {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .key-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .tabs {
+        padding: 8px;
+      }
+
+      .tab-btn {
+        font-size: 12px;
+      }
+
+      .btn-group {
+        grid-template-columns: 1fr;
+      }
+
+      .list-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-<div class="card">
-
-  <div class="card-header">
-    <h1>📁 파일 업로드</h1>
-    <p>비밀키 입력 후 파일을 올리거나 목록을 확인하세요 · 7일 후 자동 삭제</p>
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
-      <span class="shortlink-url" id="shortlink" onclick="revealLink()" style="font-size:12px;">http://bit.ly/didtldms</span>
-      <span class="shortlink-hint" id="shortlinkHint" style="font-size:11px; color:var(--text-sub);">탭하면 공개</span>
-    </div>
-  </div>
-
-  <!-- 공유로 열림 알림 -->
-  <div class="share-notice" id="shareNotice">
-    📤 갤러리에서 공유된 파일이 자동으로 추가됐어요!
-  </div>
-
-  <div class="key-bar">
-    <label>🔑 비밀키</label>
-    <input type="password" id="secretKey" placeholder="비밀키를 입력하세요" />
-  </div>
-
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="upload">⬆️ 업로드</button>
-    <button class="tab-btn" data-tab="list">📋 내 파일 목록</button>
-  </div>
-
-  <div class="tab-panel active" id="tab-upload">
-
-    <!-- 파일/텍스트 토글 -->
-    <div class="mode-toggle">
-      <button class="mode-btn active" id="modeFile" onclick="setMode('file')">📁 파일</button>
-      <button class="mode-btn" id="modeText" onclick="setMode('text')">📝 텍스트</button>
-    </div>
-
-    <!-- 파일 업로드 영역 -->
-    <div id="fileMode">
-      <div class="dropzone" id="dropzone">
-      <input type="file" id="fileInput" multiple />
-      <div class="dropzone-icon">📂</div>
-      <p>파일을 드래그하거나 클릭해서 선택</p>
-      <span>최대 5GB · 여러 파일 동시 업로드 · Ctrl+V 붙여넣기 가능</span>
-    </div>
-    <div class="file-list" id="fileList"></div>
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-label">
-        <span id="progressText">업로드 중...</span>
-        <span id="progressPct">0%</span>
+<main class="page-shell">
+  <section class="hero-panel" aria-label="업로드 페이지 소개">
+    <div class="hero-content">
+      <div>
+        <div class="brand-pill"><span class="brand-dot"></span> MAC INSPIRED CLOUD DROP</div>
+        <div class="hero-copy">
+          <h1>Upload<br><span>Studio</span></h1>
+          <p>스크린샷, 파일, 텍스트를 가볍게 올리고 바로 공유할 수 있는 개인용 업로드 보드입니다. 맥 데스크톱 위에 작은 업로드 창을 띄운 듯한 분위기로 정리했어요.</p>
+        </div>
       </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progressFill"></div>
+
+      <div class="mood-board" aria-hidden="true">
+        <div class="mood-card">
+          <div class="mood-icon">⌘</div>
+          <div>
+            <strong>Mac Window</strong>
+            <span>상단 트래픽 라이트와 부드러운 유리 질감</span>
+          </div>
+        </div>
+        <div class="mood-card">
+          <div class="mood-icon">⇧</div>
+          <div>
+            <strong>Quick Upload</strong>
+            <span>드래그, 클릭, 붙여넣기로 바로 추가</span>
+          </div>
+        </div>
+        <div class="mood-card">
+          <div class="mood-icon">✦</div>
+          <div>
+            <strong>Pinterest Mood</strong>
+            <span>파스텔 톤과 감성적인 카드 레이아웃</span>
+          </div>
+        </div>
+        <div class="mood-card">
+          <div class="mood-icon">7d</div>
+          <div>
+            <strong>Auto Clean</strong>
+            <span>업로드 파일은 7일 뒤 자동 삭제</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="error-box" id="errorBox"></div>
-    <div class="result-box" id="resultBox"></div>
-    <button class="upload-btn" id="uploadBtn" disabled>업로드</button>
-    </div><!-- end fileMode -->
+  </section>
 
-    <!-- 텍스트 입력 영역 -->
-    <div class="text-input-wrap" id="textMode">
-      <textarea class="text-area" id="textInput" placeholder="전달할 내용을 붙여넣거나 입력하세요...&#10;코드, 긴 문장, 메모 등 무엇이든 가능해요!"></textarea>
-      <div class="error-box" id="textErrorBox"></div>
-      <div class="result-box" id="textResultBox"></div>
-      <button class="upload-btn" id="textSendBtn">전송</button>
+  <section class="mac-window" aria-label="파일 업로드 창">
+    <div class="window-toolbar">
+      <div class="traffic-lights" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="window-title">cloud-drop/upload</div>
+      <div class="toolbar-pill">7일 보관</div>
     </div>
 
-    <p class="expire-note">🗓 업로드된 파일은 7일 후 자동으로 삭제됩니다</p>
-  </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="header-eyebrow">PRIVATE SHARE</div>
+        <h1>파일 업로드</h1>
+        <p>비밀키 입력 후 파일을 올리거나 목록을 확인하세요. 업로드된 파일은 7일 후 자동 삭제됩니다.</p>
 
-  <div class="tab-panel" id="tab-list">
-    <div class="list-header">
-      <span id="listCount">R2에 저장된 파일 목록</span>
-      <button class="refresh-btn" id="refreshBtn">🔄 새로고침</button>
-    </div>
-    <div class="error-box" id="listErrorBox"></div>
-    <div id="listContent">
-      <div class="list-empty">비밀키를 입력하고 새로고침을 눌러주세요 🔑</div>
-    </div>
-    <p class="expire-note">🗓 업로드된 파일은 7일 후 자동으로 삭제됩니다</p>
-  </div>
+        <div class="shortlink-wrap">
+          <span class="shortlink-label">SHORT LINK</span>
+          <span class="shortlink-url" id="shortlink" onclick="revealLink()">http://bit.ly/didtldms</span>
+          <span class="shortlink-hint" id="shortlinkHint">탭하면 공개</span>
+        </div>
+      </div>
 
-</div>
+      <div class="share-notice" id="shareNotice">
+        공유된 파일이 자동으로 추가됐어요.
+      </div>
+
+      <div class="key-bar">
+        <label for="secretKey">비밀키</label>
+        <input type="password" id="secretKey" placeholder="비밀키를 입력하세요" />
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="upload">업로드</button>
+        <button class="tab-btn" data-tab="list">내 파일 목록</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-upload">
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeFile" onclick="setMode('file')">파일</button>
+          <button class="mode-btn" id="modeText" onclick="setMode('text')">텍스트</button>
+        </div>
+
+        <div id="fileMode">
+          <div class="dropzone" id="dropzone">
+            <input type="file" id="fileInput" multiple />
+            <div class="dropzone-icon">⇧</div>
+            <p>파일을 드래그하거나 클릭해서 선택</p>
+            <span>최대 5GB · 여러 파일 동시 업로드 · Ctrl+V 붙여넣기 가능</span>
+          </div>
+
+          <div class="file-list" id="fileList"></div>
+
+          <div class="progress-wrap" id="progressWrap">
+            <div class="progress-label">
+              <span id="progressText">업로드 중...</span>
+              <span id="progressPct">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+          </div>
+
+          <div class="error-box" id="errorBox"></div>
+          <div class="result-box" id="resultBox"></div>
+
+          <button class="upload-btn" id="uploadBtn" disabled>업로드</button>
+        </div>
+
+        <div class="text-input-wrap" id="textMode">
+          <textarea class="text-area" id="textInput" placeholder="전달할 내용을 붙여넣거나 입력하세요...&#10;코드, 긴 문장, 메모 등 무엇이든 가능해요."></textarea>
+          <div class="error-box" id="textErrorBox"></div>
+          <div class="result-box" id="textResultBox"></div>
+          <button class="upload-btn" id="textSendBtn">전송</button>
+        </div>
+
+        <p class="expire-note">업로드된 파일은 7일 후 자동으로 삭제됩니다.</p>
+      </div>
+
+      <div class="tab-panel" id="tab-list">
+        <div class="list-header">
+          <span id="listCount">R2에 저장된 파일 목록</span>
+          <button class="refresh-btn" id="refreshBtn">새로고침</button>
+        </div>
+        <div class="error-box" id="listErrorBox"></div>
+        <div id="listContent">
+          <div class="list-empty">비밀키를 입력하고 새로고침을 눌러주세요.</div>
+        </div>
+        <p class="expire-note">업로드된 파일은 7일 후 자동으로 삭제됩니다.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
 
 <script>
-  const WORKER_URL = 'https://sieunfile.b41811.workers.dev';
+const WORKER_URL = 'https://sieunfile.b41811.workers.dev';
 
   const secretKeyInput = document.getElementById('secretKey');
   const getSecret = () => secretKeyInput.value.trim();
-
-  // ── 단축 링크 모자이크 해제
-  function revealLink() {
-    document.getElementById('shortlink').classList.add('revealed');
-    document.getElementById('shortlinkHint').style.display = 'none';
-  }
 
   // ── 비밀키 저장/불러오기
   const SAVED_KEY = 'upload_secret';
